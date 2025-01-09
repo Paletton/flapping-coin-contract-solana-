@@ -7,6 +7,7 @@ pub mod settle_flip;
 pub mod create_raffle;
 pub mod buy_ticket;
 pub mod reveal_winner;
+pub mod claime_prize;
 
 pub use initialize::*;
 pub use deposit::*;
@@ -17,3 +18,4 @@ pub use settle_flip::*;
 pub use create_raffle::*;
 pub use buy_ticket::*;
 pub use reveal_winner::*;
+pub use claime_prize::*;
