@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-use crate::{Raffle, RaffleInfo, RAFFLE_SEED};
+use crate::{AppStats, Raffle, RaffleInfo, APP_STATS_SEED, RAFFLE_SEED, error::ErrorCode};
 use std::mem::size_of;
 
 #[derive(Accounts)]
@@ -23,6 +23,13 @@ pub struct CreateRaffle<'info> {
         bump
     )]
     pub raffle_info: Box<Account<'info, RaffleInfo>>,
+
+    #[account(
+        mut,
+        seeds = [APP_STATS_SEED],
+        bump
+    )]
+    pub app_stats: Box<Account<'info, AppStats>>,
 
     pub system_program: Program<'info, System>,
 }
@@ -47,5 +54,24 @@ pub fn create_raffle_handler(
     raffle_info.timestampe_end = timestamp_end;
     raffle_info.winner = Pubkey::default();
     raffle_info.raffle_type = raffle_type;
+    let app_stats: &mut Box<Account<'_, AppStats>> = &mut ctx.accounts.app_stats;
+    if raffle_type == 0 {
+        if prize_amount > app_stats.weekly_raffle_amount {
+            return err!(ErrorCode::InvalidAmount);
+        }
+        app_stats.weekly_raffle_amount -= prize_amount;
+    } else if raffle_type == 1 {
+        if prize_amount > app_stats.monthly_raffle_amount {
+            return err!(ErrorCode::InvalidAmount);
+        }
+        app_stats.monthly_raffle_amount -= prize_amount;
+    } else if raffle_type == 2 {
+        if prize_amount > app_stats.random_raffle_amount {
+            return err!(ErrorCode::InvalidAmount);
+        }
+        app_stats.random_raffle_amount -= prize_amount;
+    } else {
+        return err!(ErrorCode::InvalidType);
+    }
     Ok(())
 }

@@ -18,4 +18,8 @@ pub enum ErrorCode {
     RandomnessExpired,
     #[msg("Randomness is not resolved")]
     RandomnessNotResolved,
+    #[msg("Amount is invalid")]
+    InvalidAmount,
+    #[msg("Type is invalid")]
+    InvalidType,
 }
