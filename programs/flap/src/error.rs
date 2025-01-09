@@ -22,4 +22,10 @@ pub enum ErrorCode {
     InvalidAmount,
     #[msg("Type is invalid")]
     InvalidType,
+    #[msg("Raffle is not started")]
+    RaffleNotStarted,
+    #[msg("Raffle was ended")]
+    RaffleEnded,
+    #[msg("Left ticket is not enough")]
+    NotEnoughTicketLeft
 }

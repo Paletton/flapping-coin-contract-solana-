@@ -18,6 +18,8 @@ pub struct RaffleInfo {
     pub claimed: bool,
     pub prize_amount: u64,
     pub raffle_type: u8, // 0: weekly, 1: monthly, 2: random
+    pub randomness_account: Pubkey,
+    pub commit_slot: u64,
 }
 
 impl Raffle {

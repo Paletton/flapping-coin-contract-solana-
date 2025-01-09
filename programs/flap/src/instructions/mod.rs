@@ -5,6 +5,8 @@ pub mod create_game;
 pub mod join_game;
 pub mod settle_flip;
 pub mod create_raffle;
+pub mod buy_ticket;
+pub mod reveal_winner;
 
 pub use initialize::*;
 pub use deposit::*;
@@ -13,3 +15,5 @@ pub use create_game::*;
 pub use join_game::*;
 pub use settle_flip::*;
 pub use create_raffle::*;
+pub use buy_ticket::*;
+pub use reveal_winner::*;

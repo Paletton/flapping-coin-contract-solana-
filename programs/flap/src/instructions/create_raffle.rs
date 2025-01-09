@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+use switchboard_on_demand::RandomnessAccountData;
 
 use crate::{AppStats, Raffle, RaffleInfo, APP_STATS_SEED, RAFFLE_SEED, error::ErrorCode};
 use std::mem::size_of;
@@ -31,6 +32,9 @@ pub struct CreateRaffle<'info> {
     )]
     pub app_stats: Box<Account<'info, AppStats>>,
 
+    /// CHECK: The account's data is validated manually within the handler.
+    pub randomness_account_data: AccountInfo<'info>,
+
     pub system_program: Program<'info, System>,
 }
 
@@ -54,6 +58,7 @@ pub fn create_raffle_handler(
     raffle_info.timestampe_end = timestamp_end;
     raffle_info.winner = Pubkey::default();
     raffle_info.raffle_type = raffle_type;
+    raffle_info.claimed = false;
     let app_stats: &mut Box<Account<'_, AppStats>> = &mut ctx.accounts.app_stats;
     if raffle_type == 0 {
         if prize_amount > app_stats.weekly_raffle_amount {
@@ -73,5 +78,14 @@ pub fn create_raffle_handler(
     } else {
         return err!(ErrorCode::InvalidType);
     }
+    let randomness_data: std::cell::Ref<'_, RandomnessAccountData> = RandomnessAccountData::parse(ctx.accounts.randomness_account_data.data.borrow()).unwrap();
+    let clock: Clock = Clock::get()?;
+    if randomness_data.seed_slot != clock.slot - 1 {
+        msg!("seed_slot: {}", randomness_data.seed_slot);
+        msg!("slot: {}", clock.slot);
+        return err!(ErrorCode::RandomnessAlreadyRevealed);
+    }
+    raffle_info.randomness_account = ctx.accounts.randomness_account_data.key();
+    raffle_info.commit_slot = randomness_data.seed_slot;
     Ok(())
 }
