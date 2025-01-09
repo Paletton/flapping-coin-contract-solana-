@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer};
 
-use crate::{AppStats, Player, APP_STATS_SEED, AUTHORITY_SEED, PLAYER_SEED, error::ErrorCode};
+use crate::{error::ErrorCode, AppStats, Player, APP_STATS_SEED, AUTHORITY_SEED, FLAP_VAULT_SEED, PLAYER_SEED};
 
 #[derive(Accounts)]
 pub struct Withdraw<'info> {
@@ -22,7 +22,7 @@ pub struct Withdraw<'info> {
     #[account(
         mut,
         token::mint = flap_mint,
-        token::authority = player,
+        token::authority = owner,
     )]
     pub player_flap_account: Box<Account<'info, TokenAccount>>,
 
@@ -37,6 +37,8 @@ pub struct Withdraw<'info> {
         mut,
         token::mint = flap_mint,
         token::authority = pda,
+        seeds = [FLAP_VAULT_SEED, flap_mint.key().as_ref()],
+        bump
     )]
     pub flap_vault: Box<Account<'info, TokenAccount>>,
 

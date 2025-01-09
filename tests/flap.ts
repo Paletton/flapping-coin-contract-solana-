@@ -64,7 +64,7 @@ describe("flap", () => {
       flapMint,
       bFlapAccount,
       admin,
-      betAmount * 2
+      betAmount
     )
     await setAuthority(
       connection,
@@ -92,10 +92,18 @@ describe("flap", () => {
       playerFlapAccount: aFlapAccount
     }).signers([userA]).rpc().catch(e => console.log(e));
     console.log("Your transaction signature", tx1);
-    const tx2 = await program.methods.deposit(new BN(betAmount * 2)).accounts({
+    const tx2 = await program.methods.deposit(new BN(betAmount)).accounts({
       owner: userB.publicKey,
       playerFlapAccount: bFlapAccount
     }).signers([userB]).rpc().catch(e => console.log(e));
     console.log("Your transaction signature", tx2);
   });
+
+  it ("Withdraw", async () => {
+    const tx = await program.methods.withdraw(new BN(betAmount)).accounts({
+      owner: userA.publicKey,
+      playerFlapAccount: aFlapAccount
+    }).signers([userA]).rpc();
+    console.log("Your transaction signature", tx);
+  })
 });
