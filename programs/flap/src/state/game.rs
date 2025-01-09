@@ -10,5 +10,4 @@ pub struct Game {
     pub is_ready: bool,
     pub randomness_account: Pubkey,
     pub commit_slot: u64,
-    pub wager: u64,
 }

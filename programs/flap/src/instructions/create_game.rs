@@ -41,7 +41,6 @@ pub fn create_game_handler(ctx: Context<CreateGame>, bet_amount: u64) -> Result<
     game.winner = Pubkey::default();
     game.bet_amount = bet_amount;
     game.randomness_account = Pubkey::default();
-    game.wager = 100;
     game.randomness_account = Pubkey::default();
     game.is_ready = true;
     game.is_active = true;

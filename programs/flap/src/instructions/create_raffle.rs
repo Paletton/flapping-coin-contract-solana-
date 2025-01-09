@@ -28,7 +28,8 @@ pub struct CreateRaffle<'info> {
     #[account(
         mut,
         seeds = [APP_STATS_SEED],
-        bump
+        bump,
+        constraint = app_stats.admin == raffle_creator.key(),
     )]
     pub app_stats: Box<Account<'info, AppStats>>,
 
