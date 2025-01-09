@@ -14,4 +14,8 @@ pub enum ErrorCode {
     GameIsNotActive,
     #[msg("Randomness was already revealed")]
     RandomnessAlreadyRevealed,
+    #[msg("Randomness was expired")]
+    RandomnessExpired,
+    #[msg("Randomness is not resolved")]
+    RandomnessNotResolved,
 }

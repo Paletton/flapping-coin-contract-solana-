@@ -32,6 +32,10 @@ pub fn handler(ctx: Context<Initialize>) -> Result<()> {
     app_stats.flap_mint = ctx.accounts.flap_mint.key();
     app_stats.total_amount = 0;
     app_stats.player_count = 0;
+    app_stats.burnt_amount = 0;
+    app_stats.weekly_raffle_amount = 0;
+    app_stats.monthly_raffle_amount = 0;
+    app_stats.random_raffle_amount = 0;
     app_stats.is_initialized = true;
     Ok(())
 }
