@@ -31,6 +31,7 @@ describe("flap", () => {
   
   let aFlapAccount: PublicKey;
   let bFlapAccount: PublicKey;
+  const gameKeypair = anchor.web3.Keypair.generate();
 
   const betAmount = 10000 * (10 ** 6);
 
@@ -106,4 +107,14 @@ describe("flap", () => {
     }).signers([userA]).rpc();
     console.log("Your transaction signature", tx);
   })
+
+  it ("Create game", async () => {
+    const tx = await program.methods.createGame(
+      new BN(betAmount)
+    ).accounts({
+      creator: userA.publicKey,
+      game: gameKeypair.publicKey
+    }).signers([userA, gameKeypair]).rpc();
+    console.log("Your transaction signature", tx);
+  });
 });
