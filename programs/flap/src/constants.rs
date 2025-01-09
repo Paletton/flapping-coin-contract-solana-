@@ -16,3 +16,5 @@ pub const RANDOM_RAFFLE_PERCENT: u16 = 10;
 pub const MONTHLY_RAFFLE_PERCENT: u16 = 20;
 pub const COMMUNITY_PERCENT: u16 = 40;
 pub const COMMUNITY_WALLET: Pubkey = pubkey!("Gaj7cGbQ3CCWkqn8QsnLXEVaBaTN98GRxkX1pPsC4yNS");
+pub const MAX_ENTRANTS: usize = 2000;
+pub const RAFFLE_SEED: &[u8] = b"raffle";
