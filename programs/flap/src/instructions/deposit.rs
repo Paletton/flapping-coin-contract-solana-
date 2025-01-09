@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer};
 
-use crate::{error::ErrorCode, AppStats, Player, APP_STATS_SEED, AUTHORITY_SEED, PLAYER_SEED};
+use crate::{error::ErrorCode, AppStats, Player, APP_STATS_SEED, AUTHORITY_SEED, FLAP_VAULT_SEED, PLAYER_SEED};
 use std::mem::size_of;
 
 #[derive(Accounts)]
@@ -23,7 +23,7 @@ pub struct Deposit<'info> {
     #[account(
         mut,
         token::mint = flap_mint,
-        token::authority = player,
+        token::authority = owner,
     )]
     pub player_flap_account: Box<Account<'info, TokenAccount>>,
 
@@ -39,6 +39,8 @@ pub struct Deposit<'info> {
         payer = owner,
         token::mint = flap_mint,
         token::authority = pda,
+        seeds = [FLAP_VAULT_SEED, flap_mint.key().as_ref()],
+        bump
     )]
     pub flap_vault: Box<Account<'info, TokenAccount>>,
 

@@ -15,7 +15,7 @@ pub struct Initialize <'info>{
     pub flap_mint: UncheckedAccount<'info>,
 
     #[account(
-        init,
+        init_if_needed,
         payer = signer,
         space = size_of::<AppStats>() + 8,
         seeds = [APP_STATS_SEED],

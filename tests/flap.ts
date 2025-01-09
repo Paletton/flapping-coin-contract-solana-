@@ -32,6 +32,8 @@ describe("flap", () => {
   let aFlapAccount: PublicKey;
   let bFlapAccount: PublicKey;
 
+  const betAmount = 10000 * (10 ** 6);
+
   it ("Setup", async () => {
     await connection.requestAirdrop(userA.publicKey, LAMPORTS_PER_SOL * 10);
     await connection.requestAirdrop(userB.publicKey, LAMPORTS_PER_SOL * 10);
@@ -48,7 +50,7 @@ describe("flap", () => {
       flapMint,
       aFlapAccount,
       admin,
-      10000 * (10 ** 6)
+      betAmount * 2
     )
     bFlapAccount = await createAccount(
       connection,
@@ -62,7 +64,7 @@ describe("flap", () => {
       flapMint,
       bFlapAccount,
       admin,
-      10000 * (10 ** 6)
+      betAmount * 2
     )
     await setAuthority(
       connection,
@@ -82,5 +84,18 @@ describe("flap", () => {
       admin: admin.publicKey
     }).rpc();
     console.log("Your transaction signature", tx);
+  });
+
+  it ("Deposit", async () => {
+    const tx1 = await program.methods.deposit(new BN(betAmount * 2)).accounts({
+      owner: userA.publicKey,
+      playerFlapAccount: aFlapAccount
+    }).signers([userA]).rpc().catch(e => console.log(e));
+    console.log("Your transaction signature", tx1);
+    const tx2 = await program.methods.deposit(new BN(betAmount * 2)).accounts({
+      owner: userB.publicKey,
+      playerFlapAccount: bFlapAccount
+    }).signers([userB]).rpc().catch(e => console.log(e));
+    console.log("Your transaction signature", tx2);
   });
 });
