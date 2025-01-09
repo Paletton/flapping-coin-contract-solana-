@@ -26,7 +26,7 @@ pub struct JoinGame<'info> {
     pub randomness_account_data: AccountInfo<'info>,
 }
 
-pub fn join_game(ctx: Context<JoinGame>) -> Result<()> {
+pub fn join_game_handler(ctx: Context<JoinGame>) -> Result<()> {
     let game: &mut Box<Account<'_, Game>> = &mut ctx.accounts.game;
     let player: &mut Box<Account<'_, Player>> = &mut ctx.accounts.player;
     if !game.is_active {
