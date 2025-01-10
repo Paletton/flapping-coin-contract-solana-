@@ -2,11 +2,12 @@ import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Flap } from "../target/types/flap";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
-import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
-import { AuthorityType, createAccount, createMint, createUpdateAuthorityInstruction, getOrCreateAssociatedTokenAccount, mintTo, setAuthority, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { AuthorityType, createAccount, createMint, mintTo, setAuthority, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { BN } from "bn.js";
+import { ON_DEMAND_DEVNET_PID, ON_DEMAND_DEVNET_QUEUE, Randomness } from "@switchboard-xyz/on-demand";
 
-describe("flap", () => {
+describe("flap", async () => {
   
   const provider = anchor.AnchorProvider.env();
   // Configure the client to use the local cluster.
@@ -35,6 +36,11 @@ describe("flap", () => {
 
   const betAmount = 10000 * (10 ** 6);
 
+  const sbQueue = ON_DEMAND_DEVNET_QUEUE;
+  const sbProgramId = ON_DEMAND_DEVNET_PID;
+  const sbIdl = await anchor.Program.fetchIdl(sbProgramId, provider);
+  const sbProgram = new anchor.Program(sbIdl, provider);
+  const rngKp = Keypair.generate();
   it ("Setup", async () => {
     await connection.requestAirdrop(userA.publicKey, LAMPORTS_PER_SOL * 10);
     await connection.requestAirdrop(userB.publicKey, LAMPORTS_PER_SOL * 10);
@@ -75,7 +81,6 @@ describe("flap", () => {
       AuthorityType.MintTokens,
       pda
     );
-
   });
 
   it("Is initialized!", async () => {
@@ -116,5 +121,14 @@ describe("flap", () => {
       game: gameKeypair.publicKey
     }).signers([userA, gameKeypair]).rpc();
     console.log("Your transaction signature", tx);
+  });
+
+  it ("Join game", async () => {
+    const [randomness, ix] = await Randomness.create(sbProgram, rngKp, sbQueue);
+    const tx = await program.methods.joinGame().accounts({
+      signer: userB.publicKey,
+      game: gameKeypair.publicKey,
+      randomnessAccountData: randomness.pubkey
+    }).rpc();
   });
 });

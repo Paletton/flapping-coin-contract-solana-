@@ -11,7 +11,7 @@ flap = "5LeA7rgKeS5Mkga4Eju2pom9qbqs7WwUdfBs9zRvLYov"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "Devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
