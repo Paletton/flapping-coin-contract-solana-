@@ -34,6 +34,9 @@ pub struct CreateRaffle<'info> {
     pub app_stats: Box<Account<'info, AppStats>>,
 
     /// CHECK: The account's data is validated manually within the handler.
+    pub stable_mint: UncheckedAccount<'info>,
+
+    /// CHECK: The account's data is validated manually within the handler.
     pub randomness_account_data: AccountInfo<'info>,
 
     pub system_program: Program<'info, System>,
@@ -60,6 +63,8 @@ pub fn create_raffle_handler(
     raffle_info.winner = Pubkey::default();
     raffle_info.raffle_type = raffle_type;
     raffle_info.claimed = false;
+    raffle_info.stable_mint = ctx.accounts.stable_mint.key();
+    raffle_info.total_collect = 0;
     let app_stats: &mut Box<Account<'_, AppStats>> = &mut ctx.accounts.app_stats;
     if raffle_type == 0 {
         if prize_amount > app_stats.weekly_raffle_amount {

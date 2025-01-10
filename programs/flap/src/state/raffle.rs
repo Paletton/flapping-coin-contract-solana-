@@ -20,6 +20,8 @@ pub struct RaffleInfo {
     pub raffle_type: u8, // 0: weekly, 1: monthly, 2: random
     pub randomness_account: Pubkey,
     pub commit_slot: u64,
+    pub stable_mint: Pubkey,
+    pub total_collect: u64,
 }
 
 impl Raffle {
@@ -29,5 +31,6 @@ impl Raffle {
         }
         self.entrants[self.cnt_entrants as usize] = buyer;
         self.cnt_entrants += amount;
+        self.ticket_cnt += amount;
     }
 }
