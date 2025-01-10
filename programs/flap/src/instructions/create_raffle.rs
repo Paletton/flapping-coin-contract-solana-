@@ -71,11 +71,15 @@ pub fn create_raffle_handler(
             return err!(ErrorCode::InvalidAmount);
         }
         app_stats.weekly_raffle_amount -= prize_amount;
+        raffle_info.timestamp_start = Clock::get().unwrap().unix_timestamp;
+        raffle_info.timestampe_end = Clock::get().unwrap().unix_timestamp + 86400 * 7;
     } else if raffle_type == 1 {
         if prize_amount > app_stats.monthly_raffle_amount {
             return err!(ErrorCode::InvalidAmount);
         }
         app_stats.monthly_raffle_amount -= prize_amount;
+        raffle_info.timestamp_start = Clock::get().unwrap().unix_timestamp;
+        raffle_info.timestampe_end = Clock::get().unwrap().unix_timestamp + 86400 * 30;
     } else if raffle_type == 2 {
         if prize_amount > app_stats.random_raffle_amount {
             return err!(ErrorCode::InvalidAmount);

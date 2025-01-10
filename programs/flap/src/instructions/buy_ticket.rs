@@ -77,6 +77,12 @@ pub fn buy_ticket_handler(ctx: Context<BuyTicket>, ticket_demand: u16) -> Result
     if raffle.ticket_max < raffle.ticket_cnt + ticket_demand {
         return err!(ErrorCode::NotEnoughTicketLeft);
     }
+    if (raffle_info.raffle_type == 0) || (raffle_info.raffle_type == 1) {
+        let exists: bool = raffle.entrants.iter().any(|&x| x == buyer);
+        if exists {
+            return err!(ErrorCode::OnlyOneTime);
+        }
+    }
     raffle.append(buyer, ticket_demand);
     Ok(())
 }

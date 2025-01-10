@@ -27,5 +27,7 @@ pub enum ErrorCode {
     #[msg("Raffle was ended")]
     RaffleEnded,
     #[msg("Left ticket is not enough")]
-    NotEnoughTicketLeft
+    NotEnoughTicketLeft,
+    #[msg("You can buy only one time")]
+    OnlyOneTime
 }
