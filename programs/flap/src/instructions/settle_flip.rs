@@ -3,9 +3,7 @@ use anchor_spl::token::{self, Burn, Mint, Token, TokenAccount, Transfer};
 use switchboard_on_demand::RandomnessAccountData;
 
 use crate::{
-    error::ErrorCode, AppStats, Game, Player, APP_STATS_SEED, AUTHORITY_SEED, BURN_PERCENT,
-    COMMUNITY_PERCENT, COMMUNITY_WALLET, DENOMINATOR, MONTHLY_RAFFLE_PERCENT, PLAYER_SEED,
-    PRIZE_PERCENT, RANDOM_RAFFLE_PERCENT, WEEKLY_RAFFLE_PERCENT,
+    error::ErrorCode, AppStats, Game, Player, APP_STATS_SEED, AUTHORITY_SEED, BURN_PERCENT, COMMUNITY_PERCENT, COMMUNITY_WALLET, DENOMINATOR, FLAP_VAULT_SEED, MONTHLY_RAFFLE_PERCENT, PLAYER_SEED, PRIZE_PERCENT, RANDOM_RAFFLE_PERCENT, WEEKLY_RAFFLE_PERCENT
 };
 
 #[derive(Accounts)]
@@ -39,6 +37,8 @@ pub struct SettleFlip<'info> {
         mut,
         token::mint = flap_mint,
         token::authority = pda,
+        seeds = [FLAP_VAULT_SEED, flap_mint.key().as_ref()],
+        bump
     )]
     pub flap_vault: Box<Account<'info, TokenAccount>>,
 

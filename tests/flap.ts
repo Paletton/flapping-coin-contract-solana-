@@ -41,6 +41,8 @@ describe("flap", async () => {
   const sbIdl = await anchor.Program.fetchIdl(sbProgramId, provider);
   const sbProgram = new anchor.Program(sbIdl, provider);
   const rngKp = Keypair.generate();
+
+  let randomnessAccountData: PublicKey;
   it ("Setup", async () => {
     await connection.requestAirdrop(userA.publicKey, LAMPORTS_PER_SOL * 10);
     await connection.requestAirdrop(userB.publicKey, LAMPORTS_PER_SOL * 10);
@@ -125,10 +127,21 @@ describe("flap", async () => {
 
   it ("Join game", async () => {
     const [randomness, ix] = await Randomness.create(sbProgram, rngKp, sbQueue);
+    randomnessAccountData = randomness.pubkey;
     const tx = await program.methods.joinGame().accounts({
       signer: userB.publicKey,
       game: gameKeypair.publicKey,
-      randomnessAccountData: randomness.pubkey
+      randomnessAccountData
     }).rpc();
+    console.log("Your transaction signature", tx);
   });
+
+  it ("Set flip", async () => {
+    const tx = await program.methods.settleFlip().accounts({
+      signer: userB.publicKey,
+      randomnessAccountData
+    }).signers([userB]).rpc();
+    console.log("Your transaction signature", tx);
+  });
+  
 });
